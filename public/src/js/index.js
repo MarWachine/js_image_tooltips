@@ -109,46 +109,6 @@ const drawArea = evt => {
     lastPos = { x: evt.layerX, y: evt.layerY };
 }
 
-/*
-document.addEventListener("DOMContentLoaded", evt => {
- 
- let c = document.querySelector('canvas');
- let inputColor = document.querySelector('#inputColor');
- let inputSize = document.querySelector('#inputSize');
- 
- let ctx = c.getContext('2d');
- let lastPos = false;
- let pressed = false;
- let color = inputColor.value;
- let size = Number(inputSize.value);
- 
- const zeichne = evt => {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size;
- 
-  if (lastPos && pressed) {
-   ctx.beginPath();
-   ctx.moveTo(lastPos.x, lastPos.y);
-   ctx.lineTo(evt.layerX, evt.layerY);
-   ctx.stroke();
-  }
-  lastPos = { x: evt.layerX, y: evt.layerY };
- }
- 
- const btnDown = () => pressed = true;
- const btnUp = () => pressed = false;
- 
- const changeSize = evt => size = Number(evt.target.value);
- const changeColor = evt => color = evt.target.value;
- 
- c.addEventListener('mousemove', zeichne);
- c.addEventListener('mousedown', btnDown);
- c.addEventListener('mouseup', btnUp);
- inputColor.addEventListener('change', changeColor);
- inputSize.addEventListener('change', changeSize);
-
-});
-*/
 
 // FRONT-END
 const render = () => {

@@ -1,17 +1,61 @@
 .tColorPad {
-    width: 386px;
-    height: 48px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
 .inputColor {
-    width: 40px;
-    height: 40px;
-    margin: 1px;
-    border: 1px solid #999;
-    border-radius: 30px;
+    width: 30px;
+    height: 30px;
+    margin: 2px;
+    border: 1px solid #777;
+    border-radius: 50px;
+    opacity: 0.7;
 }
+
+.inputColor:hover {
+    cursor: pointer;
+    border: 1px solid #333;
+    opacity: 1;
+}
+    #color1 {
+        background-color: #000;
+    }
+
+    #color2 {
+        background-color: #fff;
+    }
+
+    #color3 {
+        background-color: #800;
+    }
+
+    #color4 {
+        background-color: #a60;
+    }
+
+    #color5 {
+        background-color: #cc0;
+    }
+
+    #color6 {
+        background-color: #080;
+    }
+
+    #color7 {
+        background-color: #088;
+    }
+
+    #color8 {
+        background-color: #038;
+    }
+
+    #color9 {
+        background-color: #308;
+    }
+
+    #color10 {
+        background-color: #808;
+    }
 
 #cImgLoad {
     background-color:#eee;
