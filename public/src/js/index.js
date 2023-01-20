@@ -1,3 +1,32 @@
+/* TO DO:
+ *
+ * Back-end:
+ *          Canvas:
+ *                  Define pixel areas and info texts for every image
+ *                      --> idea:   mask image with transparent bg canvas that allows drawing
+ *                      -->         drawn pixels will be interpreted and saved as info areas
+ *                  "Undo" functionality that removes the last drawn line (save btnDown - btnUp increments as coord objects into arrays?)
+ * 
+ *          UI:     Buttons:
+ *                      --> Upload: Load Image into back-end canvas
+ *                      --> Edit:   Edit existing entries (which will then be loaded into back-end canvas with their defined pixel areas)
+ *                      --> Delete: Delete existing entries
+ *                      --> Undo:   Button for canvas functionality
+ *                      --> Save:   Save changes (into JSON file?), add image to front-end gallery
+ *                      --> Create new containers on click for additional pixel areas and info texts
+ * 
+ * Front-end:
+ *          Canvas:     
+ *                  Load images from back-end
+ *                  Hovering over pre-defined ares will return a respective text info
+ *                  Develop responsive sizing solution (and adapt existing pixel area values to new size)
+ *                  Implement function to load data for interactive description
+ * 
+ * Data:
+ *          Saved as JSON?
+ *          Stored on Couch?
+ */
+
 'use strict';
 
 import dom from './dom.js';
@@ -57,7 +86,16 @@ const render = () => {
             newImgHeight
         )
     }
+
+    // To do: Implement function to load data for interactive description
+    // e.g. loadLegend();
 }
+
+/*
+    const loadLegend = () => {
+
+    }
+*/
 
 // DCL INIT
 const init = () => {
