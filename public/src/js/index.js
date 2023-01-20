@@ -25,36 +25,134 @@
  * Data:
  *          Save as JSON?
  *          Store on CouchDB?
- */
+*/
 
 'use strict';
 
+import backend from './backend.js';
 import dom from './dom.js';
 import elements from './settings.js';
 import { rnd } from './helpers.js';
 
+
 // CONSTANTS / VARIABLES
+let color = 'rgba(10,180,120,80)';
+let size = 6;
+let lastPos = false;
+let pressed = false;
+
 
 // BASIC
 const domMapping = () => {
-    elements.canvas = dom.$('canvas');
+    elements.canvasBE = dom.$('cBE');
+    elements.canvasFE = dom.$('cFE');
     elements.imgTest = dom.$('#imgTest');
+    elements.inputColor = dom.$$('.inputColor');
+    elements.inputSize = dom.$('#inputSize');
 }
 
 const appendEventlisteners = () => {
+    elements.canvasBE.addEventListener('mousemove', drawArea);
+    elements.canvasBE.addEventListener('mousedown', btnDown);
+    elements.canvasBE.addEventListener('mouseup', btnUp);
+    elements.inputColor.addEventListener('click', setBrushColor);
+    elements.inputSize.addEventListener('change', setBrushSize);
 }
 
-// CORE 
 
-const initCanvas = () => {
-    const c = elements.canvas;
+// CONTROLS
+
+const btnDown = () => pressed = true;
+const btnUp = () => pressed = false;
+
+
+// CORE
+const initCanvasBE = () => {
+    const c = elements.canvasFE;
     // Declare canvas width / height                                                    <-- To do: Develop responsive sizing solution
     c.width = 1280;
     c.height = 768;
 }
 
+const initCanvasFE = () => {
+    const c = elements.canvasFE;
+    // Declare canvas width / height                                                    <-- To do: Develop responsive sizing solution
+    c.width = 1280;
+    c.height = 768;
+}
+
+
+// BACK-END
+
+const setBrushColor = evt => {
+    color = evt.target.value;
+}
+
+const setBrushSize = evt => {
+    size = Number(evt.target.value);
+}
+
+const drawArea = evt => {
+    const c = elements.canvasBE;
+    const ctx = c.getContext('2d');
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size;
+   
+    if (lastPos && pressed) {
+     ctx.beginPath();
+     ctx.moveTo(lastPos.x, lastPos.y);
+     ctx.lineTo(evt.layerX, evt.layerY);
+     ctx.stroke();
+    }
+
+    lastPos = { x: evt.layerX, y: evt.layerY };
+}
+
+/*
+document.addEventListener("DOMContentLoaded", evt => {
+ 
+ let c = document.querySelector('canvas');
+ let inputColor = document.querySelector('#inputColor');
+ let inputSize = document.querySelector('#inputSize');
+ 
+ let ctx = c.getContext('2d');
+ let lastPos = false;
+ let pressed = false;
+ let color = inputColor.value;
+ let size = Number(inputSize.value);
+ 
+ const zeichne = evt => {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = size;
+ 
+  if (lastPos && pressed) {
+   ctx.beginPath();
+   ctx.moveTo(lastPos.x, lastPos.y);
+   ctx.lineTo(evt.layerX, evt.layerY);
+   ctx.stroke();
+  }
+  lastPos = { x: evt.layerX, y: evt.layerY };
+ }
+ 
+ const btnDown = () => pressed = true;
+ const btnUp = () => pressed = false;
+ 
+ const changeSize = evt => size = Number(evt.target.value);
+ const changeColor = evt => color = evt.target.value;
+ 
+ c.addEventListener('mousemove', zeichne);
+ c.addEventListener('mousedown', btnDown);
+ c.addEventListener('mouseup', btnUp);
+ inputColor.addEventListener('change', changeColor);
+ inputSize.addEventListener('change', changeSize);
+
+});
+*/
+
+// FRONT-END
 const render = () => {
-    const c = elements.canvas;
+    const c = elements.canvasFE;
     const ctx = c.getContext('2d');
     ctx.clearRect(0, 0, c.width, c.height);
     const thisImg = elements.imgTest;                                                   // To do: Load image from back-end instead
@@ -101,7 +199,8 @@ const render = () => {
 const init = () => {
     domMapping();
     appendEventlisteners();
-    initCanvas();
+    initCanvasBE();
+    initCanvasFE();
     render();
 }
 

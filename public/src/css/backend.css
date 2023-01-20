@@ -1,8 +1,29 @@
+.tColorPad {
+    width: 386px;
+    height: 48px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.inputColor {
+    width: 40px;
+    height: 40px;
+    margin: 1px;
+    border: 1px solid #999;
+    border-radius: 30px;
+}
+
 #cImgLoad {
     background-color:#eee;
 }
 
 #cMask {
     position: absolute;
+    top: 5px;
+    left: 5px;
     background: transparent;
+}
+
+#divCBE {
+    position: relative;
 }

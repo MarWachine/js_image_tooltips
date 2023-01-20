@@ -11,14 +11,29 @@
     </head>
     <body>
         <div class="container">
-            <canvas id="cImgLoad"></canvas>
-            <canvas id="cMask"></canvas>
+            <div class="container" id="divCBE">
+                <canvas id="cImgLoad"></canvas>
+                <canvas id="cMask"></canvas>
+            </div>
             <div class="container">
-                <div class="container">
-                    <button class="btnUi" id="btnUndo">Undo</button>
-                    <button class="btnUi" id="btnRedo">Redo</button>
-                </div>
-                <button class="btnUi" id="btnNew">New Image</button>
+                <input type="range" min="1" max="10" value="5" />
+                <table class="tColorPad">
+                    <tr>
+                        <th class="inputColor" id="color1"></th>
+                        <th class="inputColor" id="color2"></th>
+                        <th class="inputColor" id="color3"></th>
+                        <th class="inputColor" id="color4"></th>
+                        <th class="inputColor" id="color5"></th>
+                        <th class="inputColor" id="color6"></th>
+                        <th class="inputColor" id="color7"></th>
+                        <th class="inputColor" id="color8"></th>
+                    </tr>
+                </table>
+                <button class="btnUi" id="btnNewMask">New Area</button>
+            </div>
+            <div class="container">
+                <input type="file" id="inputFile"/>
+                <button class="btnUi" id="btnNew">Load</button>
             </div>
         </div>
     </body>
