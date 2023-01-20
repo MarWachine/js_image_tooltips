@@ -1,0 +1,19 @@
+canvas {
+    background-color:#eee;
+    border: 1px solid #aaa;
+}
+
+.container {
+    position: relative;
+    display: block;
+    padding: 5px;
+    margin: 5px;
+    background: #eee;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+#imgTest {
+    position: relative;
+    height: 600px;
+}

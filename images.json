@@ -1,0 +1,22 @@
+[
+    {
+        "name": "colors",
+        "src": "./public/src/imgs/pexels-ann-h-1762851.jpg",
+        "text1": "blau",
+        "text2": "gelb"
+    },
+    {
+        "name": "workplace",
+        "src": "./public/src/imgs/pexels-daan-stevens-939331.jpg",
+        "text1": "Need a light?",
+        "text2": "This is where the magic happens",
+        "text3": "Nice view!"
+
+    },
+    {
+        "name": "sketchbook",
+        "src": "./public/src/imgs/pexels-picjumbocom-196644.jpg",
+        "text1": "This is my diary. Hands off!",
+        "text2": "Just a sketchbook."
+    }
+]
