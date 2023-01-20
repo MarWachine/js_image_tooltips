@@ -1,0 +1,8 @@
+#cImgLoad {
+    background-color:#eee;
+}
+
+#cMask {
+    position: absolute;
+    background: transparent;
+}
