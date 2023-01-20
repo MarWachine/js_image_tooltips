@@ -12,7 +12,7 @@
  *                      --> Edit:   Edit existing entries (which will then be loaded into back-end canvas with their defined pixel areas)
  *                      --> Delete: Delete existing entries
  *                      --> Undo:   Button for canvas functionality
- *                      --> Save:   Save changes (into JSON file?), add image to front-end gallery
+ *                      --> Save:   Save changes (into existing JSON file?), add image to front-end gallery
  *                      --> Create new containers on click for additional pixel areas and info texts
  * 
  * Front-end:
@@ -23,8 +23,8 @@
  *                  Implement function to load data for interactive description
  * 
  * Data:
- *          Saved as JSON?
- *          Stored on Couch?
+ *          Save as JSON?
+ *          Store on CouchDB?
  */
 
 'use strict';
