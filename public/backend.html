@@ -14,16 +14,19 @@
 <body>
     <div class="container" id="wrapper">
         <div class="container" id="divUpload">
-            <input type="file" id="inputFile" />
+            <form id="fileUpload">
+                <input type="file" name="inputFile" id="inputFile" />
+                <button class="btnUI">Load Image</button>
+            </form>
         </div>
         <div id="divUI">
             <div class="container" id="divSettings">
                 <p id="pSize">Brush Size:</p>
-                <input id="inputSize" type="range" min="1" max="10" value="5" />
+                <input id="inputSize" type="range" min="1" max="72" value="10" />
                 <p id="pColor">Brush Color:</p>
                 <table class="tColor">
                     <tr>
-                        <th class="inputColor" id="color1"></th>
+                        <th class="inputColor activeColor" id="color1"></th>
                         <th class="inputColor" id="color2"></th>
                         <th class="inputColor" id="color3"></th>
                         <th class="inputColor" id="color4"></th>

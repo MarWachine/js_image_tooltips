@@ -17,6 +17,12 @@
     border: 1px solid #333;
     opacity: 1;
 }
+
+.activeColor {
+    border: 1px solid #333;
+    opacity: 1;
+}
+
     #color1 {
         background-color: #000;
     }
@@ -24,7 +30,7 @@
     #color2 {
         background-color: #fff;
     }
-
+    
     #color3 {
         background-color: #800;
     }
@@ -32,7 +38,7 @@
     #color4 {
         background-color: #a60;
     }
-
+    
     #color5 {
         background-color: #cc0;
     }
@@ -40,7 +46,7 @@
     #color6 {
         background-color: #080;
     }
-
+    
     #color7 {
         background-color: #088;
     }
@@ -48,7 +54,7 @@
     #color8 {
         background-color: #038;
     }
-
+    
     #color9 {
         background-color: #308;
     }
@@ -56,18 +62,13 @@
     #color10 {
         background-color: #808;
     }
-
-#activeColor {
-    border: 1px solid #333;
-    opacity: 1;
-}
-
+    
 #btnNewMask {
     width: 100px;
 }
 
 #btnRedo, #btnUndo {
-    width: 58px;
+    width: 56px;
 }
 
 #btnSave {
