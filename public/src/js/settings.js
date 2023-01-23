@@ -1,5 +1,7 @@
 'use strict';
 
-const elements = {};
+const settings = {
+    elements: {}
+};
 
-export default elements;
+export let elements = settings.elements;

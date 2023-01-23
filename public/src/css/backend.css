@@ -1,6 +1,6 @@
-.tColorPad {
+.tColor {
     margin-top: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
 .inputColor {
@@ -57,17 +57,62 @@
         background-color: #808;
     }
 
+#activeColor {
+    border: 1px solid #333;
+    opacity: 1;
+}
+
+#btnNewMask {
+    width: 100px;
+}
+
+#btnRedo, #btnUndo {
+    width: 58px;
+}
+
+#btnSave {
+    margin: 0 auto;
+    width: 224px;
+    height: 30px;
+}
+
 #cImgLoad {
-    background-color:#eee;
+    background-color:#111;
 }
 
 #cMask {
-    position: absolute;
-    top: 5px;
-    left: 5px;
     background: transparent;
 }
 
 #divCBE {
-    position: relative;
+    float: left;
+    height: 452px;
+}
+
+#divInfo {
+    float: right;
+    width: 800px;
+    height: 452px;
+    overflow-y: scroll;
+}
+
+#divPublished {
+    min-height: 250px;
+    margin: 10px 0;
+}
+
+#divSave {
+    width: 224px;
+    border: 1px transparent;
+    margin-top: 20px;
+}
+
+#divUI {
+    float: left;
+    width: 246px;
+}
+
+#wrapper {
+    margin: 0;
+    height: 520px;
 }

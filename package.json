@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "formidable": "^2.1.1"
   },
   "name": "final_project",
   "version": "0.1.0",
   "description": "Final project concluding my \"Javascript Developer\" course",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

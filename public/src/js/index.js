@@ -29,88 +29,34 @@
 
 'use strict';
 
-import backend from './backend.js';
 import dom from './dom.js';
-import elements from './settings.js';
-import { rnd } from './helpers.js';
+import {elements} from './settings.js';
+// import { rnd } from './helpers.js';
 
 
 // CONSTANTS / VARIABLES
-let color = 'rgba(10,180,120,80)';
-let size = 6;
-let lastPos = false;
-let pressed = false;
 
 
 // BASIC
 const domMapping = () => {
-    elements.canvasBE = dom.$('cBE');
-    elements.canvasFE = dom.$('cFE');
-    elements.imgTest = dom.$('#imgTest');
-    elements.inputColor = dom.$$('.inputColor');
-    elements.inputSize = dom.$('#inputSize');
+    elements.canvasFE = dom.$('#cFE');
+    elements.content = dom.$('#content');
+    console.log(elements);
 }
 
 const appendEventlisteners = () => {
-    elements.canvasBE.addEventListener('mousemove', drawArea);
-    elements.canvasBE.addEventListener('mousedown', btnDown);
-    elements.canvasBE.addEventListener('mouseup', btnUp);
-    elements.inputColor.addEventListener('click', setBrushColor);
-    elements.inputSize.addEventListener('change', setBrushSize);
 }
-
-
-// CONTROLS
-
-const btnDown = () => pressed = true;
-const btnUp = () => pressed = false;
-
 
 // CORE
-const initCanvasBE = () => {
-    const c = elements.canvasFE;
-    // Declare canvas width / height                                                    <-- To do: Develop responsive sizing solution
-    c.width = 1280;
-    c.height = 768;
-}
-
 const initCanvasFE = () => {
     const c = elements.canvasFE;
-    // Declare canvas width / height                                                    <-- To do: Develop responsive sizing solution
+    // Declare canvas width / height                                                    <-- Optional: Develop responsive sizing solution
     c.width = 1280;
     c.height = 768;
 }
 
 
-// BACK-END
-
-const setBrushColor = evt => {
-    color = evt.target.value;
-}
-
-const setBrushSize = evt => {
-    size = Number(evt.target.value);
-}
-
-const drawArea = evt => {
-    const c = elements.canvasBE;
-    const ctx = c.getContext('2d');
-
-    ctx.strokeStyle = color;
-    ctx.lineWidth = size;
-   
-    if (lastPos && pressed) {
-     ctx.beginPath();
-     ctx.moveTo(lastPos.x, lastPos.y);
-     ctx.lineTo(evt.layerX, evt.layerY);
-     ctx.stroke();
-    }
-
-    lastPos = { x: evt.layerX, y: evt.layerY };
-}
-
-
-// FRONT-END
+// FRONT-END FUNCTIONS
 const render = () => {
     const c = elements.canvasFE;
     const ctx = c.getContext('2d');
@@ -158,10 +104,9 @@ const render = () => {
 // DCL INIT
 const init = () => {
     domMapping();
-    appendEventlisteners();
-    initCanvasBE();
     initCanvasFE();
     render();
+    appendEventlisteners();
 }
 
 window.addEventListener("load", init);

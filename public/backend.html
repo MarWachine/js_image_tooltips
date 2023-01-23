@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="de">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Bilder hochladen</title>
-        <link rel="stylesheet" href="./src/css/styles.css" />
-        
-        <script src="./src/js/index.js" type="module" defer></script>
-    </head>
-    <body>
-        <div class="container">
-            <div class="container" id="divCBE">
-                <canvas id="cImgLoad"></canvas>
-                <canvas id="cMask"></canvas>
-            </div>
-            <div class="container">
-                <input type="range" min="1" max="10" value="5" />
-                <table class="tColorPad">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bilder hochladen</title>
+    <link rel="stylesheet" href="./src/css/styles.css" />
+
+    <script src="./src/js/backend.js" type="module" defer></script>
+</head>
+
+<body>
+    <div class="container" id="wrapper">
+        <div class="container" id="divUpload">
+            <input type="file" id="inputFile" />
+        </div>
+        <div id="divUI">
+            <div class="container" id="divSettings">
+                <p id="pSize">Brush Size:</p>
+                <input id="inputSize" type="range" min="1" max="10" value="5" />
+                <p id="pColor">Brush Color:</p>
+                <table class="tColor">
                     <tr>
                         <th class="inputColor" id="color1"></th>
                         <th class="inputColor" id="color2"></th>
                         <th class="inputColor" id="color3"></th>
                         <th class="inputColor" id="color4"></th>
                         <th class="inputColor" id="color5"></th>
+                    </tr>
+                    <tr>
                         <th class="inputColor" id="color6"></th>
                         <th class="inputColor" id="color7"></th>
                         <th class="inputColor" id="color8"></th>
@@ -32,11 +38,21 @@
                     </tr>
                 </table>
                 <button class="btnUi" id="btnNewMask">New Area</button>
+                <button class="btnUi" id="btnUndo">Undo</button>
+                <button class="btnUi" id="btnRedo">Redo</button>
             </div>
-            <div class="container">
-                <input type="file" id="inputFile"/>
-                <button class="btnUi" id="btnNew">Load</button>
+            <div class="container" id="divSave">
+                <button class="btnUI" id="btnSave">Publish Image</button>
             </div>
         </div>
-    </body>
+        <div class="container" id="divCBE">
+            <canvas id="cImgLoad"></canvas>
+        </div>
+        <div class="container" id="divInfo">
+        </div>
+    </div>
+    <div class="container" id="divPublished">
+    </div>
+</body>
+
 </html>
