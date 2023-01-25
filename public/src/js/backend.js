@@ -52,11 +52,12 @@ let colorsLocked = false;
 
 const domMapping = () => {
     elements.activeColor = dom.$('.activeColor');
-    elements.divCBE = dom.$('#divCBE');
     elements.btnNewArea = dom.$('#btnNewArea');
     elements.btnRedo = dom.$('#btnRedo');
     elements.btnSave = dom.$('#btnSave');
     elements.btnUndo = dom.$('#btnUndo');
+    elements.divCBE = dom.$('#divCBE');
+    elements.divInfo = dom.$('#divInfo');
     elements.fileUpload = dom.$('#fileUpload');
     elements.canvasBE = dom.$('#cImgLoad');
     elements.inputColor = dom.$$('.inputColor');
@@ -68,12 +69,10 @@ const domMapping = () => {
 
 const appendEventlisteners = () => {
     elements.btnNewArea.addEventListener('click', handleNewArea);
-    elements.canvasBE.addEventListener('mousemove', drawArea);
-    elements.canvasBE.addEventListener('mousedown', btnDown);
-    elements.canvasBE.addEventListener('mouseup', btnUp);
     for (let inputC of elements.inputColor) inputC.addEventListener('click', setBrushColor);
     elements.inputSize.addEventListener('change', setBrushSize);
     elements.fileUpload.addEventListener('submit', handleSubmit);
+    elements.btnNewArea.addEventListener('click', handleNewArea);
 }
 
 
@@ -180,23 +179,10 @@ const lockBrushColors = () => {
 }
 
 const unlockBrushColors = () => {
-    if(colorsLocked) {
-        let inputColors = elements.inputColor;
-        inputColors.filter(
-
-        )
-        for (let inputC of elements.inputColor){
-            for (let usedColor in usedColors) {
-                if (usedColor == inputC.styles.backgroundColor){
-
-                }
-            }
-            }
             inputC.addEventListener('click', setBrushColor);
             inputC.classList.add('inputColor');
             inputC.classList.remove('inputColorBlocked');
-        }
-        colorsLocked = false;
+            colorsLocked = false;
     }
 
 const handleNewArea = () => {
@@ -209,13 +195,12 @@ const handleNewArea = () => {
 
 const initCanvasBE = () => {
     const c = elements.canvasBE;
-    // Optional: Develop solution for responsive sizing
     c.width = 800;
     c.height = 450;
 }
 
 const drawArea = evt => {
-    const c = elements.canvasBE;
+    const c = elements.currentLayer;
     const ctx = c.getContext('2d');
 
     ctx.fillStyle = `${color}`;
@@ -239,16 +224,23 @@ const initMask = () => {
         type: 'canvas',
         parent: elements.divCBE,
         classes: ['cMask'],
-        attr: {'id': '#currentLayer'
-    }});
+        attr: {'id': '#currentLayer'},
+        amEnde: false
+    });
     newMask.width = 800;
     newMask.height = 450;
+    newMask.addEventListener('mousemove', drawArea);
+    newMask.addEventListener('mousedown', btnDown);
+    newMask.addEventListener('mouseup', btnUp);
+    console.log(newMask);
+    elements.currentLayer = newMask;
     return newMask;
 }
 
 const saveMask = () => {
     const c = dom.$('.cMask');
-    const data = c.getImageData();
+    const ctx = c.getContext('2d');
+    const data = ctx.getImageData(0, 0, c.width, c.height);
     const pText = 'This is an example info text.'
     if (elements.taInfo.innerText) pText = elements.taInfo.innerText;
     const pxData = JSON.stringify(data);
@@ -257,14 +249,14 @@ const saveMask = () => {
 
 const resetMask = () => {
     const c = dom.$('#currentLayer');
-    c.removeAttribute('id');
+    c.removeAttribute('id');                // "c is null"
     initMask();
 }
 
 const printLayer = (color, pText) => {
     const layerID = String(imgName + idCount);
-    const newLayer = dom.create({type: 'div', parent: '#divInfo', classes: ['container']});
-    const newLayerColor = dom.create({type: 'div', classes: ['layerColor'], styles: `background-color: ${color}`});
+    const newLayer = dom.create({type: 'div', parent: elements.divInfo, classes: ['container']});
+    const newLayerColor = dom.create({type: 'div', classes: ['layerColor'], styles: {'background-color': color}});
     const newLayerContent = dom.create({type: 'div', classes: ['divLayerContent']});
     newLayer.append(newLayerColor);
     newLayer.append(newLayerContent);
