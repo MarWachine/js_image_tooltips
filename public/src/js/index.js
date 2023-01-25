@@ -18,7 +18,7 @@
  * Front-end:
  *          Canvas:     
  *                  Load images from back-end
- *                  Hovering over pre-defined ares will return a respective text info
+ *                  Hovering over pre-defined areas will return a respective text info
  *                  Develop responsive sizing solution (and adapt existing pixel area values to new size)
  *                  Implement function to load data for interactive description
  * 

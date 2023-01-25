@@ -26,35 +26,48 @@
  * 
  * Data:
  *          Save as JSON?
- *          Store on CouchDB?
 */
 
-'use strict';
+
+// MODULES --------------------------------------------------------------------------------------------------
 
 import dom from './dom.js';
 import { elements } from './settings.js';
 // import { rnd } from './helpers.js';
 
 
-// CONSTANTS / VARIABLES
+// CONSTANTS / VARIABLES ------------------------------------------------------------------------------------
+
+let imgName = 'img';
+let idCount = 1;
 let size = 10;
 let color = 'rgb(0, 0, 0)';
+let usedColors = [];
 let lastPos = false;
 let pressed = false;
+let colorsLocked = false;
 
 
-// BASIC
+// BASIC ----------------------------------------------------------------------------------------------------
+
 const domMapping = () => {
     elements.activeColor = dom.$('.activeColor');
+    elements.divCBE = dom.$('#divCBE');
+    elements.btnNewArea = dom.$('#btnNewArea');
+    elements.btnRedo = dom.$('#btnRedo');
+    elements.btnSave = dom.$('#btnSave');
+    elements.btnUndo = dom.$('#btnUndo');
     elements.fileUpload = dom.$('#fileUpload');
     elements.canvasBE = dom.$('#cImgLoad');
     elements.inputColor = dom.$$('.inputColor');
     elements.inputSize = dom.$('#inputSize');
     elements.pColor = dom.$('#pColor');
     elements.pSize = dom.$('#pSize');
+    elements.taInfo = dom.$('#taInfo');
 }
 
 const appendEventlisteners = () => {
+    elements.btnNewArea.addEventListener('click', handleNewArea);
     elements.canvasBE.addEventListener('mousemove', drawArea);
     elements.canvasBE.addEventListener('mousedown', btnDown);
     elements.canvasBE.addEventListener('mouseup', btnUp);
@@ -64,12 +77,14 @@ const appendEventlisteners = () => {
 }
 
 
-// CONTROLS
+// CONTROLS --------------------------------------------------------------------------------------------------
+
 const btnDown = () => pressed = true;
 const btnUp = () => pressed = false;
 
 
-// DATA UPLOAD
+// DATA UPLOAD -----------------------------------------------------------------------------------------------
+
 const handleSubmit = evt => {
 
     evt.preventDefault();
@@ -77,7 +92,7 @@ const handleSubmit = evt => {
     // Transporting formular data via POST
     fetch('/upload_data', {
         method: 'post',
-        body: new FormData(elements.fileUpload)     // Generating and sending data with FormData constructor
+        body: new FormData(elements.fileUpload)
     }).then(
         res => res.text()
     ).then(
@@ -95,6 +110,7 @@ const renderImgUpload = img => {
     // Load image from "uploads" folder
     const thisImg = document.createElement('img');
     thisImg.src = '/uploads/' + img;
+    imgName = img;
 
     console.log(thisImg);
     thisImg.addEventListener('load', () => {
@@ -128,12 +144,19 @@ const renderImgUpload = img => {
 }
 
 
-// BACK-END FUNCTIONS
-const initCanvasBE = () => {
-    const c = elements.canvasBE;
-    // Declare canvas width / height                                                    <-- Optional: Develop responsive sizing solution
-    c.width = 800;
-    c.height = 450;
+// UI ------------------------------------------------------------------------------------------------------
+
+const printBrushSize = () => {
+    elements.pSize.innerHTML = `Brush Size: ${size}`;
+}
+
+const setBrushSize = evt => {
+    size = Number(evt.target.value);
+    printBrushSize();
+}
+
+const printBrushColor = () => {
+    elements.pColor.innerHTML = `Brush Color: ${color}`;
 }
 
 const setBrushColor = evt => {
@@ -144,9 +167,51 @@ const setBrushColor = evt => {
     printBrushColor();
 }
 
-const setBrushSize = evt => {
-    size = Number(evt.target.value);
-    printBrushSize();
+const lockBrushColors = () => {
+    for (let inputC of elements.inputColor) {
+        inputC.removeEventListener('click', setBrushColor);
+        let thisColor = window.getComputedStyle(inputC, null).getPropertyValue('background-color');
+        if (thisColor != color) {
+            inputC.classList.add('inputColorBlocked');
+            inputC.classList.remove('inputColor');
+        }
+    }
+    colorsLocked = true;
+}
+
+const unlockBrushColors = () => {
+    if(colorsLocked) {
+        let inputColors = elements.inputColor;
+        inputColors.filter(
+
+        )
+        for (let inputC of elements.inputColor){
+            for (let usedColor in usedColors) {
+                if (usedColor == inputC.styles.backgroundColor){
+
+                }
+            }
+            }
+            inputC.addEventListener('click', setBrushColor);
+            inputC.classList.add('inputColor');
+            inputC.classList.remove('inputColorBlocked');
+        }
+        colorsLocked = false;
+    }
+
+const handleNewArea = () => {
+    saveMask();
+    resetMask();
+    unlockBrushColors();
+}
+
+// CANVAS -------------------------------------------------------------------------------------------------
+
+const initCanvasBE = () => {
+    const c = elements.canvasBE;
+    // Optional: Develop solution for responsive sizing
+    c.width = 800;
+    c.height = 450;
 }
 
 const drawArea = evt => {
@@ -163,24 +228,60 @@ const drawArea = evt => {
         ctx.lineTo(evt.layerX, evt.layerY);
         ctx.arc(evt.layerX, evt.layerY, size / 2, 0, 2 * Math.PI);
         ctx.fill();
+        if(!colorsLocked) lockBrushColors();
     }
 
     lastPos = { x: evt.layerX, y: evt.layerY };
 }
 
-// UI
-const printBrushColor = () => {
-    elements.pColor.innerHTML = `Brush Color: ${color}`;
+const initMask = () => {
+    const newMask = dom.create({
+        type: 'canvas',
+        parent: elements.divCBE,
+        classes: ['cMask'],
+        attr: {'id': '#currentLayer'
+    }});
+    newMask.width = 800;
+    newMask.height = 450;
+    return newMask;
 }
 
-const printBrushSize = () => {
-    elements.pSize.innerHTML = `Brush Size: ${size}`;
+const saveMask = () => {
+    const c = dom.$('.cMask');
+    const data = c.getImageData();
+    const pText = 'This is an example info text.'
+    if (elements.taInfo.innerText) pText = elements.taInfo.innerText;
+    const pxData = JSON.stringify(data);
+    printLayer(color, pText);
 }
 
-// DCL INIT
+const resetMask = () => {
+    const c = dom.$('#currentLayer');
+    c.removeAttribute('id');
+    initMask();
+}
+
+const printLayer = (color, pText) => {
+    const layerID = String(imgName + idCount);
+    const newLayer = dom.create({type: 'div', parent: '#divInfo', classes: ['container']});
+    const newLayerColor = dom.create({type: 'div', classes: ['layerColor'], styles: `background-color: ${color}`});
+    const newLayerContent = dom.create({type: 'div', classes: ['divLayerContent']});
+    newLayer.append(newLayerColor);
+    newLayer.append(newLayerContent);
+    dom.create({content: layerID, type: 'h3', parent: newLayerContent});
+    dom.create({content: pText, type: 'p', parent: newLayerContent, classes: ['infoText']});
+    usedColors.push(color);
+    idCount++
+    return newLayer;
+}
+
+
+// DCL INIT ----------------------------------------------------------------------------------------------
+
 const init = () => {
     domMapping();
     initCanvasBE();
+    initMask();
     appendEventlisteners();
     printBrushSize();
     printBrushColor();
