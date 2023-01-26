@@ -1,9 +1,15 @@
+body {
+    font-size: 12px;
+    font-weight: 300;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
 .tColor {
     margin-top: 5px;
     margin-bottom: 15px;
 }
 
-.inputColor, .inputColorBlocked, .layerColor {
+.inputColor, .inputColorBlocked {
     width: 30px;
     height: 30px;
     margin: 2px;
@@ -11,7 +17,7 @@
     border-radius: 50px;
 }
 
-.inputColor, .layerColor {
+.inputColor {
     opacity: 0.7;
 }
 
@@ -70,18 +76,27 @@
         background-color: #808;
     }
     
-    #btnNewArea {
-        width: 100px;
-    }
-    
 #btnRedo, #btnUndo {
-    width: 56px;
+    width: 100px;
+    height: 28px;
+    margin: 0 2px;
+    border-radius: 5px;
 }
 
-#btnSave {
-    margin: 0 auto;
-    width: 224px;
-    height: 30px;
+#btnNewArea, #btnSave {
+    margin: 0 5px;
+    width: 100px;
+    height: 28px;
+    float: left;
+    border-radius: 5px;
+    color: #035;
+    background-color: #fff;
+    border-color: #035;
+}
+
+#btnNewArea:hover, #btnSave:hover {
+    background-color: #035;
+    color: #fff;
 }
 
 #cImgLoad {
@@ -89,11 +104,14 @@
 }
 
 .cMask {
-    background: #777;
-    opacity: 0.3;
+    opacity: 0.7;
     position: absolute;
     top: 5px;
     left: 5px;
+}
+
+.cThumb {
+    background-color: #111;
 }
 
 #divCBE {
@@ -104,20 +122,37 @@
 
 #divInfo {
     float: right;
-    width: 800px;
+    width: 780px;
     height: 452px;
     overflow-y: scroll;
 }
 
-#divLayerContent {
+.divLayerImg {
+    float: left;
+    width: 160px;
+    height: 90px;
+    position: relative;
+}
+
+.divLayerContent {
     float: right;
-    width: 500px;
-    height: 200px;
+    width: 560px;
+    height: 90px;
+    position: relative;
+}
+
+.divNewLayer {
+    width: 750px;
+    height: 92px;
+    padding: 5px;
+    display: block;
+    background-color: #fff;
 }
 
 #divPublished {
     min-height: 250px;
     margin: 10px 0;
+    background: #eee;
 }
 
 #divSave {
@@ -139,4 +174,5 @@
 #wrapper {
     margin: 0;
     height: 520px;
+    background: #eee;
 }

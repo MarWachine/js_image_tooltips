@@ -40,7 +40,7 @@ import { elements } from './settings.js';
 
 let imgName = 'img';
 let idCount = 1;
-let size = 10;
+let size = 20;
 let color = 'rgb(0, 0, 0)';
 let usedColors = [];
 let lastPos = false;
@@ -110,8 +110,6 @@ const renderImgUpload = img => {
     const thisImg = document.createElement('img');
     thisImg.src = '/uploads/' + img;
     imgName = img;
-
-    console.log(thisImg);
     thisImg.addEventListener('load', () => {
         // Portrait mode
         if (thisImg.width <= thisImg.height) {
@@ -179,11 +177,13 @@ const lockBrushColors = () => {
 }
 
 const unlockBrushColors = () => {
-            inputC.addEventListener('click', setBrushColor);
-            inputC.classList.add('inputColor');
-            inputC.classList.remove('inputColorBlocked');
-            colorsLocked = false;
+    for (let inputC of elements.inputColor) {
+        inputC.addEventListener('click', setBrushColor);
+        inputC.classList.add('inputColor');
+        inputC.classList.remove('inputColorBlocked');
     }
+    colorsLocked = false;
+}
 
 const handleNewArea = () => {
     saveMask();
@@ -208,12 +208,11 @@ const drawArea = evt => {
 
     if (lastPos && pressed) {
         ctx.beginPath();
-        ctx.beginPath();
         ctx.moveTo(lastPos.x, lastPos.y);
         ctx.lineTo(evt.layerX, evt.layerY);
         ctx.arc(evt.layerX, evt.layerY, size / 2, 0, 2 * Math.PI);
         ctx.fill();
-        if(!colorsLocked) lockBrushColors();
+        if (!colorsLocked) lockBrushColors();
     }
 
     lastPos = { x: evt.layerX, y: evt.layerY };
@@ -224,7 +223,7 @@ const initMask = () => {
         type: 'canvas',
         parent: elements.divCBE,
         classes: ['cMask'],
-        attr: {'id': '#currentLayer'},
+        attr: { 'id': '#currentLayer' },
         amEnde: false
     });
     newMask.width = 800;
@@ -232,7 +231,6 @@ const initMask = () => {
     newMask.addEventListener('mousemove', drawArea);
     newMask.addEventListener('mousedown', btnDown);
     newMask.addEventListener('mouseup', btnUp);
-    console.log(newMask);
     elements.currentLayer = newMask;
     return newMask;
 }
@@ -241,31 +239,53 @@ const saveMask = () => {
     const c = dom.$('.cMask');
     const ctx = c.getContext('2d');
     const data = ctx.getImageData(0, 0, c.width, c.height);
-    const pText = 'This is an example info text.'
-    if (elements.taInfo.innerText) pText = elements.taInfo.innerText;
-    const pxData = JSON.stringify(data);
-    printLayer(color, pText);
+    console.log(data);
+    let pText = 'This is an example info text.'
+    if (dom.$('#taInfo').value) pText = dom.$('#taInfo').value;
+    // const pxData = JSON.stringify(data);
+    printLayer(color, pText, c);
 }
 
 const resetMask = () => {
-    const c = dom.$('#currentLayer');
-    c.removeAttribute('id');                // "c is null"
+    const c = elements.currentLayer;
+    c.remove();
+    dom.$('#taInfo').value = '';
+    dom.$('#inputSize').value = size;
     initMask();
 }
 
-const printLayer = (color, pText) => {
-    const layerID = String(imgName + idCount);
-    const newLayer = dom.create({type: 'div', parent: elements.divInfo, classes: ['container']});
-    const newLayerColor = dom.create({type: 'div', classes: ['layerColor'], styles: {'background-color': color}});
-    const newLayerContent = dom.create({type: 'div', classes: ['divLayerContent']});
-    newLayer.append(newLayerColor);
+const printLayer = (color, pText, canvas) => {
+    const cID = 'layer' + idCount;
+    const newLayer = dom.create({ type: 'div', parent: elements.divInfo, classes: ['container', 'divNewLayer'] });
+    const newLayerImgDiv = dom.create({ type: 'div', classes: ['divLayerImg'] });
+    const newLayerContent = dom.create({ type: 'div', classes: ['divLayerContent'] });
+    newLayer.append(newLayerImgDiv);
     newLayer.append(newLayerContent);
-    dom.create({content: layerID, type: 'h3', parent: newLayerContent});
-    dom.create({content: pText, type: 'p', parent: newLayerContent, classes: ['infoText']});
+    const c = dom.create({ type: 'canvas', parent: newLayerImgDiv, classes: ['cThumb'], attr: {'id': cID, 'width': '160px', 'height': '90px'} });
+    const ctx = c.getContext('2d');
+    ctx.scale(0.2, 0.2);
+    ctx.drawImage(canvas, 0, 0);
+    dom.create({ content: pText, type: 'p', parent: newLayerContent, classes: ['infoText'] });
     usedColors.push(color);
     idCount++
     return newLayer;
 }
+
+/*
+Bild-DL
+
+const link = document.createElement('a');
+link.download = 'image.png';
+link.href = elements.cTriangles.toDataURL();
+link.click();
+
+JSON-DL
+const element = document.createElement('a');
+element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(settings.data)));
+element.setAttribute('download', 'data.json');
+
+element.click();
+*/
 
 
 // DCL INIT ----------------------------------------------------------------------------------------------
