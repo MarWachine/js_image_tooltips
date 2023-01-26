@@ -1,3 +1,71 @@
+body {
+    background-color: #111;
+}
+
+img {
+    width: 100%;
+}
+
+#divCFE{
+    width: 1282px;
+    height: 722px;
+    position: relative;
+    display: block;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #aaa;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.divArrow {
+    background-image:url("../imgs/arrow-symbol.png");
+    background-size: 100%;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    border: 1px solid #666;
+}
+
+.divArrow:hover {
+    background-image:url("../imgs/arrow-symbol_hover.png");
+    background-size: 100%;
+    cursor: pointer;
+    border: 1px solid #246;
+}
+
+#previous {
+    top: 311px;
+    left: -115px;
+    transform: rotateZ(180deg);
+}
+
+#next {
+    top: 311px;
+    right: -115px;
+}
+
 #cFE {
-    background-color:#eee;
+    background-color:#111;
+    margin: 0 auto;
+    position: relative;
+}
+
+#wrapperFE {
+    display: block;
+    margin: 0;
+    padding: 5px;
+    margin: 5px;
+    background-color: #eee;
+}
+
+#gallery {
+    position: relative;
+    display: block;
+    width: 99%;
+    height: 94px;
+    margin: 30px auto;
+    border: 1px solid #aaa;
+    border-radius: 5px;
 }

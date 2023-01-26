@@ -50,27 +50,25 @@ const appendEventlisteners = () => {
 // CORE
 const initCanvasFE = () => {
     const c = elements.canvasFE;
-    // Declare canvas width / height                                                    <-- Optional: Develop responsive sizing solution
     c.width = 1280;
-    c.height = 768;
+    c.height = 720;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, c.width, c.height);
 }
 
 
 // FRONT-END FUNCTIONS
-const render = () => {
+const render = img => {
     const c = elements.canvasFE;
     const ctx = c.getContext('2d');
-    ctx.clearRect(0, 0, c.width, c.height);
-    const thisImg = elements.imgTest;                                                   // To do: Load image from back-end instead
-
-    // Scale, center, and draw the loaded image depending on its format
+    ctx.clearRect(0, 0, c.width, c.height);                                             
 
     // Portrait mode
-    if (thisImg.width <= thisImg.height) {
-        let newImgWidth = thisImg.width * (c.height / thisImg.height);
+    if (img.width <= img.height) {
+        let newImgWidth = img.width * (c.height / img.height);
         let marginX = (c.width - newImgWidth) / 2;
         ctx.drawImage(
-            thisImg,
+            img,
             marginX,
             0,
             newImgWidth,
@@ -80,26 +78,18 @@ const render = () => {
 
     // Landscape mode
     else {
-        let newImgHeight = thisImg.height * (c.width / thisImg.width);
+        let newImgHeight = img.height * (c.width / img.width);
         let marginY = (c.width - newImgWidth) / 2;
         ctx.drawImage(
-            thisImg,
+            img,
             0,
             marginY,
             c.width,
             newImgHeight
         )
     }
-
-    // To do: Implement function to load data for interactive description
-    // e.g. loadLegend();
 }
 
-/*
-    const loadLegend = () => {
-
-    }
-*/
 
 // DCL INIT
 const init = () => {

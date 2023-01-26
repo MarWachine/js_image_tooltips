@@ -39,13 +39,13 @@ import { elements } from './settings.js';
 // CONSTANTS / VARIABLES ------------------------------------------------------------------------------------
 
 let imgName = 'img';
-let idCount = 1;
 let size = 20;
 let color = 'rgb(0, 0, 0)';
 let usedColors = [];
 let lastPos = false;
 let pressed = false;
 let colorsLocked = false;
+let publishedImages = [];
 
 
 // BASIC ----------------------------------------------------------------------------------------------------
@@ -73,6 +73,7 @@ const appendEventlisteners = () => {
     elements.inputSize.addEventListener('change', setBrushSize);
     elements.fileUpload.addEventListener('submit', handleSubmit);
     elements.btnNewArea.addEventListener('click', handleNewArea);
+    elements.btnSave.addEventListener('click', publishImage);
 }
 
 
@@ -197,6 +198,8 @@ const initCanvasBE = () => {
     const c = elements.canvasBE;
     c.width = 800;
     c.height = 450;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, c.width, c.height);
 }
 
 const drawArea = evt => {
@@ -239,10 +242,8 @@ const saveMask = () => {
     const c = dom.$('.cMask');
     const ctx = c.getContext('2d');
     const data = ctx.getImageData(0, 0, c.width, c.height);
-    console.log(data);
     let pText = 'This is an example info text.'
     if (dom.$('#taInfo').value) pText = dom.$('#taInfo').value;
-    // const pxData = JSON.stringify(data);
     printLayer(color, pText, c);
 }
 
@@ -255,20 +256,61 @@ const resetMask = () => {
 }
 
 const printLayer = (color, pText, canvas) => {
-    const cID = 'layer' + idCount;
     const newLayer = dom.create({ type: 'div', parent: elements.divInfo, classes: ['container', 'divNewLayer'] });
     const newLayerImgDiv = dom.create({ type: 'div', classes: ['divLayerImg'] });
     const newLayerContent = dom.create({ type: 'div', classes: ['divLayerContent'] });
     newLayer.append(newLayerImgDiv);
     newLayer.append(newLayerContent);
-    const c = dom.create({ type: 'canvas', parent: newLayerImgDiv, classes: ['cThumb'], attr: {'id': cID, 'width': '160px', 'height': '90px'} });
+    const c = dom.create({ type: 'canvas', parent: newLayerImgDiv, classes: ['cThumb'], attr: {'width': '160px', 'height': '90px'} });
     const ctx = c.getContext('2d');
     ctx.scale(0.2, 0.2);
     ctx.drawImage(canvas, 0, 0);
     dom.create({ content: pText, type: 'p', parent: newLayerContent, classes: ['infoText'] });
     usedColors.push(color);
-    idCount++
     return newLayer;
+}
+
+const publishImage = () => {
+    let layers = [...dom.$$('.divNewLayer')];
+    let texts = [...dom.$$('.infoText')];
+    let areas = [...dom.$$('.cThumb')];
+
+    const img = {};
+    img.url = './uploads/' + imgName;
+    img.areas = [];
+    if(imgName != 'img' && layers.length) {
+        for (let el of layers) {
+            let layerID = layers.indexOf(el);
+            const area = {};
+            area.id = layerID + 1;
+            area.text = texts[layerID].innerHTML;
+            area.data = [];
+            // push array with layer canvas' alpha values
+            let c = areas[layerID];
+            let ctx = c.getContext('2d');
+            let imgData = ctx.getImageData(0, 0, c.width, c.height);
+            for (let i = 0; i < imgData.data.length; i += 4) {
+                if (i % (imgData.width * 4) == 0) area.data.push([]);
+                area.data[area.data.length-1].push(Number(imgData.data[i+3] < 250));
+            }
+            img.areas.push(area);
+        }
+        publishedImages.push(img);
+    }
+    console.log(img);
+    printToGallery(img);
+    resetBackEnd();
+}
+
+const printToGallery = img => {
+    
+}
+
+const resetBackEnd = () => {
+    for (let el of [...dom.$$('.divNewLayer')]) el.remove();
+    dom.$('#inputFile').value = '';
+    initCanvasBE();
+    initMask();
 }
 
 /*
