@@ -1,34 +1,5 @@
 'use strict';
 
-/* TO DO:
- *
- * Back-end:
- *          Canvas:
- *                  Define pixel areas and info texts for every image
- *                      --> idea:   mask image with transparent bg canvas that allows drawing
- *                      -->         drawn pixels will be interpreted and saved as info areas
- *                  "Undo" functionality that removes the last drawn line (save btnDown - btnUp increments as coord objects into arrays?)
- * 
- *          UI:     Buttons:
- *                      --> Upload: Load Image into back-end canvas
- *                      --> Edit:   Edit existing entries (which will then be loaded into back-end canvas with their defined pixel areas)
- *                      --> Delete: Delete existing entries
- *                      --> Undo:   Button for canvas functionality
- *                      --> Save:   Save changes (into existing JSON file?), add image to front-end gallery
- *                      --> Create new containers on click for additional pixel areas and info texts
- * 
- * Front-end:
- *          Canvas:     
- *                  Load images from back-end
- *                  Hovering over pre-defined ares will return a respective text info
- *                  Optional: Develop responsive sizing solution (and adapt existing pixel area values to new size)
- *                  Implement function to load data for interactive description
- * 
- * Data:
- *          Save as JSON?
-*/
-
-
 // MODULES --------------------------------------------------------------------------------------------------
 
 import dom from './dom.js';
@@ -322,7 +293,7 @@ const printToGallery = () => {
                 type: 'canvas',
                 parent: elements.gallery,
                 classes: ['publishedImg'],
-                attr: { 'width': '160px', 'height': '90px' }
+                attr: { 'width': '160px', 'height': '90px', 'data-src': img }
             });
             render(publishedImg, img)
             publishedImg.addEventListener('click', () => loadFromThumbnail(publishedImg));
@@ -331,22 +302,30 @@ const printToGallery = () => {
 }
 
 
-const loadFromThumbnail = evt => {
+const loadFromThumbnail = target => {
     initCanvasFE();
     const c = dom.$('#cFE');
     const ctx = c.getContext('2d');
     ctx.scale(8, 8);
-    ctx.drawImage(evt, 0, 0);
-    c.addEventListener('mousemove', () => compareAreas(c, evt));
+    ctx.drawImage(target, 0, 0);
+    c.dataset.src = target.dataset.src;
+    c.addEventListener('mousemove', (evt) => compareAreas(c, evt));
 }
 
 const compareAreas = (c, evt) => {
-    console.log('comparing...');
-    lastPos = { x: c.layerX, y: c.layerY };
+    lastPos = { x: evt.layerX, y: evt.layerY };
+    //console.log(publishedImages);
     if (lastPos) {
-        for (let el of publishedImages) {
-            if (el.url == evt.src) {
-                for (let x in el.area.data) {
+        publishedImages.forEach(imgObj => {
+            if (imgObj.url == evt.target.dataset.src) {
+                //console.log('comparing...');
+                let ausgabe = false;
+                imgObj.areas.forEach(mask => {
+                    if(!mask.data[~~(lastPos.y / 8)][~~(lastPos.x / 8)]) ausgabe = (mask.text);
+                    //else updateInfoBox('Transparent...');
+                })
+                updateInfoBox(ausgabe || 'Transparent.');
+               /* for (let x in el.area.data) {
                     if (lastPos.x == x) {
                         for (let y in x) {
                             if (lastPos.y == y) {
@@ -356,9 +335,9 @@ const compareAreas = (c, evt) => {
                             }
                         }
                     }
-                }
+                }*/
             }
-        }
+        })
     }
 }
 
