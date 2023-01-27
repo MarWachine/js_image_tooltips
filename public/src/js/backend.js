@@ -324,7 +324,6 @@ const printToGallery = () => {
                 classes: ['publishedImg'],
                 attr: { 'width': '160px', 'height': '90px' }
             });
-            console.log(img);
             render(publishedImg, img)
             publishedImg.addEventListener('click', () => loadFromThumbnail(publishedImg));
         }
@@ -342,10 +341,9 @@ const loadFromThumbnail = evt => {
 }
 
 const compareAreas = (c, evt) => {
-    console.log('Compare');
+    console.log('comparing...');
     lastPos = { x: c.layerX, y: c.layerY };
     if (lastPos) {
-        console.log(lastPos);
         for (let el of publishedImages) {
             if (el.url == evt.src) {
                 for (let x in el.area.data) {
