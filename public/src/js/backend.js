@@ -305,6 +305,8 @@ const publishImage = () => {
             img.areas.push(area);
         }
         publishedImages.push(img);
+        console.log(img);
+        console.log(publishedImages);
     }
     printToGallery();
     resetBackEnd();
