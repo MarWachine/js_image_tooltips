@@ -53,11 +53,10 @@ let publishedImages = [];
 const domMapping = () => {
     elements.activeColor = dom.$('.activeColor');
     elements.btnNewArea = dom.$('#btnNewArea');
-    elements.btnRedo = dom.$('#btnRedo');
     elements.btnSave = dom.$('#btnSave');
-    elements.btnUndo = dom.$('#btnUndo');
     elements.divCBE = dom.$('#divCBE');
     elements.divInfo = dom.$('#divInfo');
+    elements.divPublished = dom.$('#divPublished');
     elements.fileUpload = dom.$('#fileUpload');
     elements.canvasBE = dom.$('#cImgLoad');
     elements.inputColor = dom.$$('.inputColor');
@@ -113,7 +112,7 @@ const renderImgUpload = img => {
     imgName = img;
     thisImg.addEventListener('load', () => {
         // Portrait mode
-        if (thisImg.width <= thisImg.height) {
+        if (thisImg.width / thisImg.height < 16 / 9) {
             let newImgWidth = thisImg.width * (c.height / thisImg.height);
             let marginX = (c.width - newImgWidth) / 2;
             ctx.drawImage(
@@ -259,13 +258,17 @@ const printLayer = (color, pText, canvas) => {
     const newLayer = dom.create({ type: 'div', parent: elements.divInfo, classes: ['container', 'divNewLayer'] });
     const newLayerImgDiv = dom.create({ type: 'div', classes: ['divLayerImg'] });
     const newLayerContent = dom.create({ type: 'div', classes: ['divLayerContent'] });
+    const newLayerX = dom.create({ type: 'div', classes: ['divLayerX'] })
     newLayer.append(newLayerImgDiv);
     newLayer.append(newLayerContent);
-    const c = dom.create({ type: 'canvas', parent: newLayerImgDiv, classes: ['cThumb'], attr: {'width': '160px', 'height': '90px'} });
+    newLayer.append(newLayerX);
+    const c = dom.create({ type: 'canvas', parent: newLayerImgDiv, classes: ['cThumb'], attr: { 'width': '160px', 'height': '90px' } });
     const ctx = c.getContext('2d');
     ctx.scale(0.2, 0.2);
     ctx.drawImage(canvas, 0, 0);
     dom.create({ content: pText, type: 'p', parent: newLayerContent, classes: ['infoText'] });
+    const btnDelete = dom.create({ content: 'X', type: 'button', parent: newLayerX, classes: ['btnDelete'] });
+    btnDelete.addEventListener('click', () => newLayer.remove());
     usedColors.push(color);
     return newLayer;
 }
@@ -276,9 +279,9 @@ const publishImage = () => {
     let areas = [...dom.$$('.cThumb')];
 
     const img = {};
-    img.url = './uploads/' + imgName;
+    img.url = '/uploads/' + imgName;
     img.areas = [];
-    if(imgName != 'img' && layers.length) {
+    if (imgName != 'img' && layers.length) {
         for (let el of layers) {
             let layerID = layers.indexOf(el);
             const area = {};
@@ -291,19 +294,50 @@ const publishImage = () => {
             let imgData = ctx.getImageData(0, 0, c.width, c.height);
             for (let i = 0; i < imgData.data.length; i += 4) {
                 if (i % (imgData.width * 4) == 0) area.data.push([]);
-                area.data[area.data.length-1].push(Number(imgData.data[i+3] < 250));
+                area.data[area.data.length - 1].push(Number(imgData.data[i + 3] < 250));
             }
             img.areas.push(area);
         }
         publishedImages.push(img);
     }
-    console.log(img);
-    printToGallery(img);
+    printToGallery();
     resetBackEnd();
 }
 
-const printToGallery = img => {
-    
+// skaliert nicht richtig. außerdem: wie JSON speichern und im front-end laden?
+const printToGallery = () => {
+    if (publishedImages.length) {
+        let existingImages = [...dom.$$('.publishedImg')];
+        for (let el of existingImages) el.remove();
+        for (let el of publishedImages) {
+            const publishedImg = dom.create({ type: 'div', parent: elements.divPublished, classes: ['publishedImg'] });
+            publishedImg.style.backgroundImage = `url('${el.url}')`;
+            publishedImg.addEventListener('mouseenter', hoverDel(publishedImg));
+            publishedImg.addEventListener('mouseleave', resetBG(publishedImg));
+            publishedImg.addEventListener('click', () => deleteImage(publishedImg));
+        }
+    }
+}
+
+// funktioniert noch nicht
+const hoverDel = img => {
+    dom.create({ content: 'DELETE IMAGE', type: 'p', parent: img, classes: ['delP'] });
+    img.classList.add('delBG');
+}
+
+// auch nicht
+const resetBG = img => {
+    const delP = img.querySelector('p');
+    delP.remove();
+    img.classList.remove('delBG');
+}
+
+const deleteImage = img => {
+    for (let i in publishedImages) {
+        if (`url('${i.url}')` == img.style.backgroundImage) publishedImages.splice(i, 1);
+    }
+    img.remove();
+    console.log(publishedImages);
 }
 
 const resetBackEnd = () => {

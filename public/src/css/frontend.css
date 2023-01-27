@@ -22,8 +22,8 @@ img {
     background-image:url("../imgs/arrow-symbol.png");
     background-size: 100%;
     position: absolute;
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     border-radius: 5px;
     border: 1px solid #666;
 }
@@ -36,14 +36,14 @@ img {
 }
 
 #previous {
-    top: 311px;
-    left: -115px;
+    top: 341px;
+    left: -100px;
     transform: rotateZ(180deg);
 }
 
 #next {
-    top: 311px;
-    right: -115px;
+    top: 341px;
+    right: -100px;
 }
 
 #cFE {
