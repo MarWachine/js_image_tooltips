@@ -1,6 +1,10 @@
 @import './backend.css';
 @import './frontend.css';
 
+body {
+    background-color: #111;
+}
+
 canvas {
     border: 1px solid #aaa;
 }

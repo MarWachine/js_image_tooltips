@@ -51,14 +51,20 @@ let publishedImages = [];
 // BASIC ----------------------------------------------------------------------------------------------------
 
 const domMapping = () => {
+    //Frontend
+    elements.canvasFE = dom.$('#cFE');
+    elements.content = dom.$('#content');
+    elements.infoP = dom.$('#infoP');
+    // _________________________________________
     elements.activeColor = dom.$('.activeColor');
     elements.btnNewArea = dom.$('#btnNewArea');
     elements.btnSave = dom.$('#btnSave');
+    elements.canvasBE = dom.$('#cImgLoad');
     elements.divCBE = dom.$('#divCBE');
     elements.divInfo = dom.$('#divInfo');
     elements.divPublished = dom.$('#divPublished');
     elements.fileUpload = dom.$('#fileUpload');
-    elements.canvasBE = dom.$('#cImgLoad');
+    elements.gallery = dom.$('#gallery');
     elements.inputColor = dom.$$('.inputColor');
     elements.inputSize = dom.$('#inputSize');
     elements.pColor = dom.$('#pColor');
@@ -304,40 +310,60 @@ const publishImage = () => {
     resetBackEnd();
 }
 
-// skaliert nicht richtig. außerdem: wie JSON speichern und im front-end laden?
 const printToGallery = () => {
     if (publishedImages.length) {
         let existingImages = [...dom.$$('.publishedImg')];
         for (let el of existingImages) el.remove();
         for (let el of publishedImages) {
-            const publishedImg = dom.create({ type: 'div', parent: elements.divPublished, classes: ['publishedImg'] });
-            publishedImg.style.backgroundImage = `url('${el.url}')`;
-            publishedImg.addEventListener('mouseenter', hoverDel(publishedImg));
-            publishedImg.addEventListener('mouseleave', resetBG(publishedImg));
-            publishedImg.addEventListener('click', () => deleteImage(publishedImg));
+            let img = el.url;
+            const publishedImg = dom.create({
+                type: 'canvas',
+                parent: elements.gallery,
+                classes: ['publishedImg'],
+                attr: { 'width': '160px', 'height': '90px' }
+            });
+            console.log(img);
+            render(publishedImg, img)
+            publishedImg.addEventListener('click', () => loadFromThumbnail(publishedImg));
         }
     }
 }
 
-// funktioniert noch nicht
-const hoverDel = img => {
-    dom.create({ content: 'DELETE IMAGE', type: 'p', parent: img, classes: ['delP'] });
-    img.classList.add('delBG');
+
+const loadFromThumbnail = evt => {
+    initCanvasFE();
+    const c = dom.$('#cFE');
+    const ctx = c.getContext('2d');
+    ctx.scale(8, 8);
+    ctx.drawImage(evt, 0, 0);
+    c.addEventListener('mousemove', () => compareAreas(c, evt));
 }
 
-// auch nicht
-const resetBG = img => {
-    const delP = img.querySelector('p');
-    delP.remove();
-    img.classList.remove('delBG');
-}
-
-const deleteImage = img => {
-    for (let i in publishedImages) {
-        if (`url('${i.url}')` == img.style.backgroundImage) publishedImages.splice(i, 1);
+const compareAreas = (c, evt) => {
+    console.log('Compare');
+    lastPos = { x: c.layerX, y: c.layerY };
+    if (lastPos) {
+        console.log(lastPos);
+        for (let el of publishedImages) {
+            if (el.url == evt.src) {
+                for (let x in el.area.data) {
+                    if (lastPos.x == x) {
+                        for (let y in x) {
+                            if (lastPos.y == y) {
+                                if (!y) {
+                                    updateInfoBox(el.area.text);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-    img.remove();
-    console.log(publishedImages);
+}
+
+const updateInfoBox = info => {
+    elements.infoP.innerHTML = info;
 }
 
 const resetBackEnd = () => {
@@ -347,27 +373,59 @@ const resetBackEnd = () => {
     initMask();
 }
 
-/*
-Bild-DL
 
-const link = document.createElement('a');
-link.download = 'image.png';
-link.href = elements.cTriangles.toDataURL();
-link.click();
+// FRONT-END FUNCTIONS
+const initCanvasFE = () => {
+    const c = elements.canvasFE;
+    c.width = 1280;
+    c.height = 720;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, c.width, c.height);
+}
 
-JSON-DL
-const element = document.createElement('a');
-element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(settings.data)));
-element.setAttribute('download', 'data.json');
+const render = (c, img) => {
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, c.width, c.height);
 
-element.click();
-*/
+    const thisImg = document.createElement('img');
+    thisImg.src = img;
+
+    // Portrait mode
+    if (thisImg.width / thisImg.height <= 16 / 9) {
+        let newImgWidth = thisImg.width * (c.height / thisImg.height);
+        let marginX = (c.width - newImgWidth) / 2;
+        ctx.drawImage(
+            thisImg,
+            marginX,
+            0,
+            newImgWidth,
+            c.height
+        )
+    }
+
+    // Landscape mode
+    else {
+        let newImgHeight = thisImg.height * (c.width / thisImg.width);
+        let marginY = (c.height - newImgHeight) / 2;
+        ctx.drawImage(
+            thisImg,
+            0,
+            marginY,
+            c.width,
+            newImgHeight
+        )
+    }
+}
 
 
 // DCL INIT ----------------------------------------------------------------------------------------------
 
 const init = () => {
     domMapping();
+    //Frontend
+    initCanvasFE();
+    //render();
+    //
     initCanvasBE();
     initMask();
     appendEventlisteners();

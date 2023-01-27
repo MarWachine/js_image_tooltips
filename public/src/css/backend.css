@@ -196,11 +196,8 @@ body {
 }
 
 .publishedImg {
-    width: 160px;
-    height: 90px;
     margin: 0 1px;
     float: left;
-    background-size: 100%;
 }
 
 #taInfo {

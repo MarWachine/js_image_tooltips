@@ -1,21 +1,12 @@
-body {
-    background-color: #111;
-}
-
-img {
-    width: 100%;
-}
-
 #divCFE{
     width: 1282px;
     height: 722px;
     position: relative;
-    display: block;
     padding: 5px;
     margin: 5px;
     border: 1px solid #aaa;
-    margin: 0 auto;
     border-radius: 5px;
+    float:left;
 }
 
 .divArrow {
@@ -48,7 +39,6 @@ img {
 
 #cFE {
     background-color:#111;
-    margin: 0 auto;
     position: relative;
 }
 
@@ -63,9 +53,18 @@ img {
 #gallery {
     position: relative;
     display: block;
+    clear: both;
     width: 99%;
-    height: 94px;
+    height: 120px;
     margin: 30px auto;
     border: 1px solid #aaa;
     border-radius: 5px;
+    overflow-x: scroll;
+}
+
+#infoBox {
+    width: 500px;
+    height: 720px;
+    margin: 10px 10px 0 0;
+    float: right;
 }
